@@ -21,5 +21,5 @@ my $app = sub {
 
 $server->register_service($app);
 
-EV->loop
+EV::loop
 #AE::cv->recv
