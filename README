@@ -1,0 +1,41 @@
+npmd is a Dancer and AnyEvent powered web application which provides an HTTP
+API for accessing an NPM2000 Network Power Manager. This is a good idea because
+the NPM2000 can only handle exactly one connection at a time. npmd keeps a
+connection open and serializes the requests so that you will gain more
+performance *and* reliability from using npmd instead of directly communicating
+with the NPM2000.
+
+= Setup
+
+To get going, simply run ./twig.pl and you have a webserver listening on port
+5000.
+
+= Usage
+
+On your shell:
+
+----------------------------------------------
+# Turn on port 1
+curl -d 1 -X PUT http://localhost:5000/port/1
+
+# Turn off port 1
+curl -d 0 -X PUT http://localhost:5000/port/1
+
+# Get status
+curl http://localhost:5000/status
+
+# Disable npmd
+curl -X POST http://localhost:5000/disable
+
+# Re-enable npmd
+curl -X POST http://localhost:5000/enable
+----------------------------------------------
+
+Using Perl with IO::All:
+
+----------------------------------------------
+# Turn on port 1
+'1' > io('http://localhost:5000/port/1');
+
+# …and so on
+----------------------------------------------
