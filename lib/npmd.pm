@@ -15,17 +15,6 @@ my $npm_status = undef;
 # create NPM object
 my $npm = AnyEvent::NPM->new(ip => '192.168.0.178');
 
-# schedule status updates every 60 seconds (kind of as a keep-alive)
-our $refresh_status;
-$refresh_status = AnyEvent->timer(after => 60, interval => 60, cb => sub {
-    debug "inside npmd";
-});
-
-# trigger initial status update:
-$npm->status->cb(sub {
-    $npm_status = $_[0]->recv;
-});
-
 get '/' => sub {
     my $status = $npm_status;
 
