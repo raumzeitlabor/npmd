@@ -82,9 +82,9 @@ sub _command {
 		#die 'handle error: ' . $_[2];
             });
 	# trigger timeout upon 5 seconds without read/write
-	$handle->timeout(5);
         my $auth = "5507FFFF" . "12345678" . "5A";
         $handle->push_write($auth);
+	$handle->timeout(5);
         $handle->push_read(chunk => 10, sub {
             my ($handle, $chunk) = @_;
         Dancer::Logger::debug 'read chunk: ' . $chunk;
@@ -168,6 +168,10 @@ sub status {
         }
 
         my ($status) = ($reply =~ /D104FFFF([0-9A-F]{2})/);
+        if (!defined($status)) {
+            $cv->croak('Invalid port status');
+            return;
+        }
         say "DEBUG: port status = $status";
         my $is = hex $status;
 
