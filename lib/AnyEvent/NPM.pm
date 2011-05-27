@@ -8,14 +8,14 @@ use Dancer::Logger;
 use v5.10;
 
 has 'ip' => (is => 'ro', isa => 'Str', required => 1);
-has '_handle' => (is => 'rw', isa => 'AnyEvent::Handle', default => undef, clearer => 'clear_handle');
+has '_handle' => (is => 'rw', isa => 'AnyEvent::Handle', predicate => 'has_handle', clearer => 'clear_handle');
 
 sub _when_connected {
     my ($self, $cb) = @_;
 
     Dancer::Logger::debug '_when_connected';
 
-    if (defined($self->_handle)) {
+    if ($self->has_handle) {
         $cb->(undef);
         return;
     }
