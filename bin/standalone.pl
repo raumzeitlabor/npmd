@@ -74,6 +74,7 @@ tcp_server undef, 5000, sub {
     $conns{$id} = $fh;
     $state{$id} = { id => $id, step => 0, length => 0 };
 
+    my $timeout;
     my $hdl = AnyEvent::Handle->new(
         fh => $fh,
         on_error => sub {
@@ -81,11 +82,23 @@ tcp_server undef, 5000, sub {
             $_[0]->destroy;
             delete $conns{$id};
             delete $state{$id};
+            undef $timeout;
             my @k = keys %conns;
             say "still " . @k . " clients connected";
             if (@k == 0) {
                 $process_queue = undef;
             }
+        }
+    );
+    $timeout = AnyEvent->timer(
+        after => 10,
+        cb => sub {
+            say "Disconnecting $id due to timeout (10 seconds)";
+            undef $timeout;
+            $hdl->push_shutdown();
+            undef $hdl;
+            delete $conns{$id};
+            delete $state{$id};
         }
     );
     my $reader;
