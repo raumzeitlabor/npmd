@@ -120,8 +120,8 @@ tcp_server undef, 5000, sub {
         }
 
         # Store the Content-Length, if it exists
-        if ($line =~ /^Content-Length: /) {
-            ($s->{length}) = ($line =~ m,^Content-Length: ([0-9]+),);
+        if ($line =~ /^Content-Length: /i) {
+            ($s->{length}) = ($line =~ m,^Content-Length: ([0-9]+),i);
         }
 
         # After an empty line (separates header/body), we go to the next step
